@@ -2,75 +2,140 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Monitor de Pecera - ESP32</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Aquarium Monitor</title>
+
     <style>
         body {
             background-color: #000;
-            color: #0f0;
-            font-family: monospace;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
-        h1 {
+
+        header {
+            background: linear-gradient(90deg, #0f0f0f, #1a1a1a);
+            padding: 25px;
             text-align: center;
-            padding: 20px;
+            border-bottom: 2px solid #333;
         }
+
+        h1 {
+            font-size: 32px;
+            margin: 0;
+            color: #4da3ff;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 10px;
+            color: #aaa;
+        }
+
         .container {
-            width: 90%;
-            margin: auto;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 1000px;
         }
+
         .card {
-            border: 1px solid #0f0;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 10px;
+            width: 260px;
             padding: 20px;
-            font-size: 20px;
-            border-radius: 5px;
+            margin: 15px;
+            text-align: center;
+            transition: 0.3s;
         }
+
+        .card:hover {
+            border-color: #4da3ff;
+            transform: translateY(-5px);
+        }
+
+        .label {
+            color: #4da3ff;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
         footer {
             text-align: center;
-            margin-top: 40px;
-            padding: 10px;
-            color: #444;
+            padding: 20px;
+            color: #555;
+            font-size: 14px;
         }
     </style>
+
 </head>
 <body>
 
-<h1>MONITOR DE PECERA</h1>
+<header>
+    <h1>Smart Aquarium Monitoring System</h1>
+    <h2>Plataforma IoT para el control avanzado de ecosistemas acuáticos</h2>
+</header>
 
-<div class="container">
-    <div class="card">Humedad: <span id="humedad">--</span>%</div>
-    <div class="card">Temperatura: <span id="temperatura">--</span>°C</div>
-    <div class="card">PH del Agua: <span id="ph">--</span></div>
-    <div class="card">Nivel del Agua: <span id="nivel">--</span></div>
-</div>
+<section>
+    <div class="container">
+
+        <div class="card">
+            <div class="label">Nivel de Agua</div>
+            <div class="value" id="nivel">-- cm</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Detección de Depredadores</div>
+            <div class="value" id="depredador">--</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Temperatura</div>
+            <div class="value" id="temp">-- °C</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Oxígeno</div>
+            <div class="value" id="oxigeno">-- mg/L</div>
+        </div>
+
+        <div class="card">
+            <div class="label">pH del Agua</div>
+            <div class="value" id="ph">--</div>
+        </div>
+
+    </div>
+</section>
 
 <footer>
-    Actualización cada 20 segundos - ESP32
+    Smart Aquarium System © 2025 — Proyecto Universitario IoT
 </footer>
 
 <script>
-    function actualizarDatos() {
-        fetch("http://TU_IP_DEL_ESP32/datos")
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("humedad").textContent = data.humedad;
-                document.getElementById("temperatura").textContent = data.temperatura;
-                document.getElementById("ph").textContent = data.ph;
-                document.getElementById("nivel").textContent = data.nivel;
-            })
-            .catch(error => {
-                console.log("Error obteniendo datos del ESP32:", error);
-            });
-    }
+function actualizarDatos() {
+    fetch("http://TU-IP-DEL-ESP32/datos") // Ejemplo: http://192.168.0.150/datos
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("nivel").textContent = data.nivel + " cm";
+        document.getElementById("depredador").textContent = data.depredador ? "Detectado" : "No Detectado";
+        document.getElementById("temp").textContent = data.temperatura + " °C";
+        document.getElementById("oxigeno").textContent = data.oxigeno + " mg/L";
+        document.getElementById("ph").textContent = data.ph;
+    })
+    .catch(err => console.log("Error al obtener datos:", err));
+}
 
-    // Llamar al iniciar
-    actualizarDatos();
-
-    // Llamar cada 20 segundos
-    setInterval(actualizarDatos, 20000);
+setInterval(actualizarDatos, 20000);
+actualizarDatos();
 </script>
 
 </body>
